@@ -8,6 +8,24 @@
 git clone https://github.com/loboking/claude-code-skills.git ~/.claude/commands
 ```
 
+## 🏷️ monggle- 접두사
+
+모든 스킬은 `monggle-` 접두사로도 사용 가능합니다 (자동완성 활용):
+
+```bash
+# 기존 방식
+/gemini, /super, /duo, /run, /smart-brain, /project-init
+
+# monggle 접두사 (Tab 자동완성)
+/monggle-gemini, /monggle-super, /monggle-duo
+/monggle-run, /monggle-brain, /monggle-init
+```
+
+**장점**:
+- `/mong<Tab>` 입력으로 모든 커스텀 스킬 목록 표시
+- 공식 스킬과 구분 용이
+- 기존 이름도 그대로 사용 가능
+
 ## 🛠️ 스킬 목록
 
 ### 1. `/gemini` - Gemini 서브에이전트 호출
