@@ -145,23 +145,92 @@ cd /your/project
 
 ---
 
+### 6. `/project-init` - 스마트 프로젝트 초기화
+
+Plan Mode로 프로젝트 구조를 설계한 후 자동으로 초기화합니다.
+
+**사용법**:
+```bash
+# 자동 감지
+/project-init
+
+# 타입 지정
+/project-init react
+/project-init -t nextjs -n my-blog
+
+# 계획만 보기
+/project-init --dry flutter
+```
+
+**지원 프로젝트**:
+- **Web**: React, Next.js, Vue, Vite
+- **Mobile**: Flutter, React Native, Android, iOS
+- **Backend**: Spring Boot, FastAPI, Express, Go, Rust
+- **Desktop**: Electron, Tauri
+
+**워크플로우**:
+1. **프로젝트 타입 선택** (자동 감지 또는 사용자 지정)
+2. **Plan Mode 진입** - 디렉토리 구조, 의존성, 설정 파일 계획
+3. **사용자 승인** - 실행|수정|취소
+4. **자동 실행**:
+   - CLI 명령어 실행 (`npx create-react-app`, `flutter create` 등)
+   - 설정 파일 생성 (`.gitignore`, `README.md`, `CLAUDE.md`)
+   - 린팅/포매팅 설정
+   - Git 초기화 및 첫 커밋
+
+**생성되는 파일**:
+- `README.md` (프로젝트 설명, 설치 방법, 개발 가이드)
+- `CLAUDE.md` (토큰 최적화 규칙 포함)
+- `.gitignore` (타입별 템플릿)
+- 타입별 설정 파일 (`tsconfig.json`, `build.gradle`, `pubspec.yaml` 등)
+
+**옵션**:
+- `-t, --type [type]`: 프로젝트 타입 명시
+- `-n, --name [name]`: 프로젝트 이름
+- `--no-git`: Git 초기화 건너뛰기
+- `--no-deps`: 의존성 설치 건너뛰기
+- `--dry`: 계획만 보기 (실행 안함)
+- `-m [model]`: Plan Mode 모델 선택
+
+**특징**:
+- Plan Mode 필수 진입 (계획 없이 실행 불가)
+- 프로덕션 수준 설정
+- 타입 안전 기본값 (TypeScript, strict linting)
+- 다음 단계 가이드 제공
+
+---
+
 ## 🎯 사용 시나리오
 
-### 시나리오 1: 새 기능 구현
+### 시나리오 1: 새 프로젝트 시작
+```bash
+# 1. 프로젝트 초기화 (Plan Mode)
+/project-init react
+
+# 2. 구조 확인 → 실행
+# → 자동으로 React + TypeScript + Tailwind 설정
+# → README, CLAUDE.md, .gitignore 생성
+# → Git 초기화 및 첫 커밋
+
+# 3. 첫 기능 구현
+/super 로그인 페이지 추가
+```
+
+### 시나리오 2: 새 기능 구현
 ```bash
 /super 사용자 인증 기능 추가
 # → 요구사항 확인
 # → 실행 선택
 ```
 
-### 시나리오 2: 복잡한 아키텍처 결정
+### 시나리오 3: 복잡한 아키텍처 결정
 ```bash
 /duo 마이크로서비스 vs 모놀리식 선택
 # → Claude + Gemini 협업
 # → 합의 기반 구현
 ```
 
-### 시나리오 3: 대규모 리팩토링
+### 시나리오 4: 대규모 리팩토링
 ```bash
 /run -o 전체 코드베이스 리팩토링
 # → Opus 모델 자동 선택
@@ -169,7 +238,7 @@ cd /your/project
 # → 최적 에이전트 활용
 ```
 
-### 시나리오 4: 외부 관점 필요
+### 시나리오 5: 외부 관점 필요
 ```bash
 /gemini -t "REST vs GraphQL"
 # → 10회 논쟁
@@ -190,6 +259,26 @@ cd /your/project
 ## 🔧 고급 사용법
 
 ### 워크플로우 체이닝
+
+**완전한 프로젝트 워크플로우**:
+```bash
+# 1. 프로젝트 초기화
+/project-init nextjs -n my-app
+
+# 2. 토큰 최적화 (자동 포함되지만 추가 커스터마이징 가능)
+/smart-brain
+
+# 3. 요구사항 확장
+/super 블로그 시스템 추가
+
+# 4. AI 협업으로 검증
+/duo [요구사항]
+
+# 5. 최적 모델로 실행
+/run -o [최종 구현]
+```
+
+**기존 프로젝트 개선**:
 ```bash
 # 1. 토큰 최적화 적용
 /smart-brain
