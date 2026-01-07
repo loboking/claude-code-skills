@@ -1,8 +1,18 @@
 ---
-allowed-tools: Read, Grep, Glob, Bash, Edit, Write
+allowed-tools: Read, Grep, Glob, Bash, Edit, Write, Task
 description: Claude + Gemini 2-round collaboration with super prompt (user)
 ---
-Request: "$ARGUMENTS"
+Args: "$ARGUMENTS"
+
+## 1. Parse Model Option
+Check if args starts with `-h`, `-s`, or `-o`:
+- `-h` → model = haiku
+- `-s` → model = sonnet (default)
+- `-o` → model = opus
+
+Remove model flag from args, store remaining as request.
+
+---
 
 ## Phase 1: Super Prompt (analyze request)
 1. Analyze intent (WHO/WHAT/WHY)
@@ -40,10 +50,20 @@ Output format:
 실행|수정|취소
 ```
 
-On "실행": implement based on consensus.
+On "실행": implement based on consensus with selected model.
+
+## 4. Execution Phase
+**Triggered by**: "실행" response
+
+On execution:
+- Use selected model (haiku/sonnet/opus)
+- Call Task tool with consensus prompt
+- Report implementation results
 
 ## Rules
+- Parse model option FIRST before super prompt analysis
 - Always 2 rounds with gemini-agent
 - Report both opinions transparently
 - Respond in Korean
 - If conflict: present both, let user decide
+- Use selected model in implementation phase

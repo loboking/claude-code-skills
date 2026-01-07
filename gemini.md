@@ -5,15 +5,22 @@ description: Gemini 서브에이전트 호출 (user)
 
 Args: "$ARGUMENTS"
 
-## Option Detection
-Check if args starts with "-t":
-- Yes → Debate Mode (Claude vs Gemini)
-- No → Normal Mode (simple query)
+## 1. Parse Options
+Check args for options (in order):
+1. Model option: `-h` (haiku) | `-s` (sonnet) | `-o` (opus) | default (sonnet)
+2. Mode option: `-t` (debate mode) | default (normal mode)
+
+Remove parsed options from args, store remaining as query/topic.
+
+## 2. Option Detection
+Routing logic:
+- If `-t` found → Debate Mode (Claude vs Gemini)
+- If `-t` not found → Normal Mode (simple query)
 
 ---
 
-## Normal Mode (no -t flag)
-Call: `gemini-agent "$ARGUMENTS"`
+## 3. Normal Mode (no -t flag)
+Call: `gemini-agent "$QUERY"` (with model selected)
 
 After receiving result:
 - Code request → write to file
@@ -22,10 +29,11 @@ After receiving result:
 
 ---
 
-## Debate Mode (-t flag)
+## 4. Debate Mode (-t flag)
 
 ### Usage
-`/gemini -t "주제"`
+`/gemini [-h/-s/-o] -t "주제"`
+- Optional: `-h/-s/-o` for model selection (default: sonnet)
 
 ### Workflow
 ```
@@ -115,7 +123,15 @@ Extension: +10 per "계속"
 
 ---
 
+## 5. Model Usage
+When calling gemini-agent:
+- Pass selected model (haiku/sonnet/opus) for consistency
+- Normal mode: Model affects response depth/quality
+- Debate mode: Model used for Claude's reasoning in each round
+
 ## Rules
+- Parse model and mode options FIRST before routing
+- Preserve `-t` debate mode functionality
 - Respond in Korean
 - Show ALL exchanges to user (both sides)
 - Be fair - present both positions objectively
