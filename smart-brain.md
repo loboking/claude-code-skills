@@ -3,6 +3,45 @@ allowed-tools: Read, Write, Edit, Bash(ls:*), Bash(find:*)
 description: Add token optimization rules to project CLAUDE.md (user)
 ---
 
+## 0. Help System (First Priority)
+
+Check if args match help patterns:
+- `--help`
+- `-h` alone (without other text)
+- empty args
+
+If help requested, show and exit:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📖 /smart-brain 사용 가이드
+
+용도: 프로젝트의 CLAUDE.md에 토큰 최적화 규칙 추가
+
+사용법:
+  /smart-brain                     # 현재 디렉토리에 적용
+
+옵션:
+  --help           이 도움말 표시
+
+예시:
+  cd my-project
+  /smart-brain
+
+언제 사용:
+  ✅ 새 프로젝트 시작 시
+  ✅ 토큰 사용량이 많을 때
+  ✅ 팀 협업 시 규칙 통일 필요
+
+워크플로우:
+  CLAUDE.md 탐색 → 기존 규칙 확인 → 토큰 최적화 섹션 추가 → 완료
+
+효과:
+  - diff-only 출력 강제
+  - 코드 재출력 방지
+  - 불필요한 설명 제거
+  - 예상 절감: 20-40% per session
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## 1. Find CLAUDE.md
 
 Check for existing CLAUDE.md in current directory:
@@ -72,3 +111,19 @@ Estimated token savings: 20-40% per session
 - Detect Korean/English context and use appropriate language for confirmation
 - Never overwrite entire file, only append/update section
 - Preserve existing CLAUDE.md content
+
+---
+
+## Final Metadata Output
+
+Always append to the end of your response:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 실행 정보
+
+스킬: /smart-brain
+모델: [current model]
+사용 에이전트: [none]
+호출 스킬: [none]
+처리 파일: [CLAUDE.md path]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

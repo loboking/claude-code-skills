@@ -4,6 +4,56 @@ description: Smart orchestrator with dynamic model/agent selection (user)
 ---
 Args: "$ARGUMENTS"
 
+## 0. Help System (First Priority)
+
+Check if args match help patterns:
+- `--help`
+- `-h` alone (without other text)
+- empty args
+
+If help requested, show and exit:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📖 /run 사용 가이드
+
+용도: 작업 분석 후 최적 모델/에이전트 자동 선택 및 실행
+
+사용법:
+  /run <작업>                      # 자동 분석 후 모델 추천
+  /run -h <작업>                   # haiku로 즉시 실행
+  /run -s <작업>                   # sonnet으로 즉시 실행
+  /run -o <작업>                   # opus로 즉시 실행
+  /run --dry <작업>                # 계획만 표시 (실행 안 함)
+
+옵션:
+  -h, --haiku      빠른 실행 (간단한 작업)
+  -s, --sonnet     균형 잡힌 성능 (기본값)
+  -o, --opus       최고 품질 (복잡한 작업)
+  --dry            계획만 표시
+  --temp           임시 리소스 사용
+  --save           영구 리소스 저장
+  --parallel       병렬 실행
+  --seq            순차 실행
+  --no-mcp         MCP 서버 미사용
+  --fresh          /clear 권장
+  --compact        /compact 권장
+  --help           이 도움말 표시
+
+예시:
+  /run README 작성               # 분석 후 모델 추천
+  /run -s 테스트 코드 추가       # sonnet으로 즉시 실행
+  /run -o 전체 아키텍처 리팩토링 # opus로 즉시 실행
+  /run --dry 프로젝트 초기화     # 계획만 확인
+
+언제 사용:
+  ✅ 작업 복잡도를 모를 때 (자동 분석)
+  ✅ 프로젝트 타입별 최적화 필요
+  ✅ 여러 에이전트/훅/MCP 조율 필요
+
+워크플로우:
+  작업 분석 → 프로젝트 감지 → 모델/에이전트 선택 → 실행 계획 → 실행|수정|취소
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## 1. Parse Options & Detect Immediate Execution
 ```
 Model:  -h (haiku) | -s (sonnet) | -o (opus) | auto
@@ -115,3 +165,20 @@ Steps:
 - Provide FULL context to agents
 - Detect project type and adapt
 - Respond in Korean
+
+---
+
+## Final Metadata Output
+
+Always append to the end of your response:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 실행 정보
+
+스킬: /run
+모델: [haiku|sonnet|opus]
+사용 에이전트: [list of agents]
+호출 스킬: [if any]
+프로젝트 타입: [detected type]
+실행 모드: [parallel|sequential|dry-run]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

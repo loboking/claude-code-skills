@@ -4,6 +4,46 @@ description: Claude + Gemini 2-round collaboration with super prompt (user)
 ---
 Args: "$ARGUMENTS"
 
+## 0. Help System (First Priority)
+
+Check if args match help patterns:
+- `--help`
+- `-h` alone (without other text)
+- empty args
+
+If help requested, show and exit:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📖 /duo 사용 가이드
+
+용도: Claude와 Gemini가 2회 협업하여 구현 전 합의 도출
+
+사용법:
+  /duo <구현 요청>                 # 기본 (sonnet)
+  /duo -h <구현 요청>              # haiku 모델
+  /duo -s <구현 요청>              # sonnet 모델
+  /duo -o <구현 요청>              # opus 모델
+
+옵션:
+  -h, --haiku      빠른 실행 (간단한 작업)
+  -s, --sonnet     균형 잡힌 성능 (기본값)
+  -o, --opus       최고 품질 (복잡한 작업)
+  --help           이 도움말 표시
+
+예시:
+  /duo 로그인 기능 구현
+  /duo -o 대규모 아키텍처 설계
+  /duo -h 간단한 유틸 함수 추가
+
+언제 사용:
+  ✅ 복잡한 구현 전 설계 검증
+  ✅ 다양한 관점의 접근법 비교
+  ✅ 리스크가 높은 변경사항
+
+워크플로우:
+  요청 분석 → Gemini 1차 의견 → Gemini 2차 피드백 → 합의 도출 → 실행|수정|취소
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 ## 1. Parse Model Option
 Check if args starts with `-h`, `-s`, or `-o`:
 - `-h` → model = haiku
@@ -67,3 +107,19 @@ On execution:
 - Respond in Korean
 - If conflict: present both, let user decide
 - Use selected model in implementation phase
+
+---
+
+## Final Metadata Output
+
+Always append to the end of your response:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 실행 정보
+
+스킬: /duo
+모델: [haiku|sonnet|opus]
+사용 에이전트: gemini-agent
+호출 스킬: [none]
+협업 라운드: 2
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
