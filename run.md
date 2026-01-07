@@ -4,7 +4,7 @@ description: Smart orchestrator with dynamic model/agent selection (user)
 ---
 Args: "$ARGUMENTS"
 
-## 1. Parse Options
+## 1. Parse Options & Detect Immediate Execution
 ```
 Model:  -h (haiku) | -s (sonnet) | -o (opus) | auto
 Save:   --temp (disposable) | --save (permanent)
@@ -12,6 +12,11 @@ Exec:   --parallel | --seq | --dry (plan only)
 Skip:   --no-mcp | --no-gemini | --no-hook
 Fresh:  --fresh (recommend /clear) | --compact (recommend /compact)
 ```
+
+**Immediate Execution Logic**:
+- If `-h`, `-s`, or `-o` detected → Set model and skip to Step 10 (execute immediately)
+- If `--dry` detected → Show plan only, skip execution
+- If no model option → Continue with analysis (Steps 2-9)
 
 ## 2. Context Management (First)
 Before analysis, check task complexity:
@@ -90,10 +95,14 @@ Use Glob to detect, then tailor agent prompts accordingly.
 ```
 
 ## 10. Execution
-On "실행":
+**Triggered by**: "실행" response OR model option (-h/-s/-o) in args
+
+Steps:
 1. Create temp directories if needed
 2. Create hooks if needed
-3. Execute with Task tool (parallel if safe)
+3. Execute with Task tool:
+   - Use model from option (-h→haiku, -s→sonnet, -o→opus) or recommended model
+   - Parallel if safe, sequential if dependencies
 4. Provide full context including project type
 5. Report results
 
