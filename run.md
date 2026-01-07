@@ -9,7 +9,7 @@ Args: "$ARGUMENTS"
 Model:  -h (haiku) | -s (sonnet) | -o (opus) | auto
 Save:   --temp (disposable) | --save (permanent)
 Exec:   --parallel | --seq | --dry (plan only)
-Skip:   --no-mcp | --no-gemini
+Skip:   --no-mcp | --no-gemini | --no-hook
 ```
 
 ## 2. Analyze Task
@@ -18,6 +18,7 @@ Skip:   --no-mcp | --no-gemini
 - Parallelizable: yes/no (check dependencies)
 - MCP needed: which servers
 - New skill/agent needed: yes/no
+- Hook needed: yes/no (auto-detect)
 
 ## 3. Model Selection (Performance First)
 Priority: Quality over cost savings
@@ -34,8 +35,25 @@ Priority: Quality over cost savings
 - New skill needed? → create in:
   - ~/.claude/commands/ (--save)
   - ~/.claude/temp/commands/ (--temp)
+- New hook needed? → create in:
+  - ~/.claude/hooks/custom/ (--save or reusable)
+  - ~/.claude/temp/hooks/ (--temp, one-time)
 
-## 5. MCP Recommendation
+## 5. Hook Auto-Detection
+| Task Type | Hook Type | Action |
+|-----------|-----------|--------|
+| Code write/edit | PostToolUse | Auto format/lint |
+| File modification | PreToolUse | Secret check |
+| Build/deploy | PostToolUse | Run tests |
+| Session setup | SessionStart | Init environment |
+
+Hook creation process:
+1. Create script in hooks directory
+2. Backup settings.json
+3. Update settings.json with jq
+4. Confirm with user before applying
+
+## 6. MCP Recommendation
 | Task Type | MCP Server |
 |-----------|------------|
 | Web/crawl | puppeteer, playwright |
@@ -44,7 +62,7 @@ Priority: Quality over cost savings
 | API test | fetch |
 | File heavy | filesystem |
 
-## 6. Report Plan (Korean)
+## 7. Report Plan (Korean)
 ```
 ## 실행 계획
 
@@ -55,6 +73,7 @@ Priority: Quality over cost savings
 ### 리소스
 - 모델: [haiku/sonnet/opus] - [선택 이유]
 - 에이전트: [목록] (신규 시: 1회성/영구)
+- 훅: [목록] (신규 시: 1회성/영구) ← 없으면 생략
 - MCP 추천: [목록] (필요시)
 
 ### 예상
@@ -65,17 +84,19 @@ Priority: Quality over cost savings
 실행|수정|취소
 ```
 
-## 7. Execution
+## 8. Execution
 On "실행":
-1. Create temp resources if needed (mkdir -p ~/.claude/temp/agents ~/.claude/temp/commands)
-2. Execute with Task tool
+1. Create temp directories if needed (mkdir -p ~/.claude/temp/{agents,commands,hooks})
+2. Create hooks if needed (script + settings.json update)
+3. Execute with Task tool
    - Use selected model
    - Parallel if safe, sequential if dependencies exist
-3. Provide full context to agents (don't cut corners)
-4. Report results with quality check
+4. Provide full context to agents (don't cut corners)
+5. Report results with quality check
 
-## 8. Cleanup
+## 9. Cleanup
 - Delete ~/.claude/temp/* after completion (if --temp used)
+- Restore settings.json if temp hooks were added
 - Report cleanup status
 
 ## Quality Rules
@@ -84,3 +105,4 @@ On "실행":
 - If result quality is poor → retry with higher model
 - Respond in Korean
 - --dry: show plan only, no execution
+- --no-hook: skip hook auto-detection
