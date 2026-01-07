@@ -10,99 +10,99 @@ Model:  -h (haiku) | -s (sonnet) | -o (opus) | auto
 Save:   --temp (disposable) | --save (permanent)
 Exec:   --parallel | --seq | --dry (plan only)
 Skip:   --no-mcp | --no-gemini | --no-hook
+Fresh:  --fresh (recommend /clear) | --compact (recommend /compact)
 ```
 
-## 2. Analyze Task
+## 2. Context Management (First)
+Before analysis, check task complexity:
+- Complex/large task → Output: "💡 복잡한 작업입니다. /compact 실행을 권장합니다."
+- Completely new topic → Output: "💡 새 작업입니다. /clear 를 고려해보세요."
+- --fresh flag → Output clear recommendation
+- --compact flag → Output compact recommendation
+
+## 3. Project Context Detection
+Detect project type via file patterns:
+| Pattern | Project Type | Preferred Agent |
+|---------|--------------|-----------------|
+| *.py, requirements.txt, pyproject.toml | Python | general-purpose (python focus) |
+| build.gradle, AndroidManifest.xml | Android | general-purpose (android focus) |
+| package.json, *.ts, *.tsx | Node.js/React | general-purpose (js/ts focus) |
+| go.mod, *.go | Go | general-purpose (go focus) |
+| Cargo.toml, *.rs | Rust | general-purpose (rust focus) |
+| *.swift, Package.swift | Swift | general-purpose (swift focus) |
+
+Use Glob to detect, then tailor agent prompts accordingly.
+
+## 4. Analyze Task
 - Complexity: simple/medium/complex
-- Required agents: [Explore, Plan, code-reviewer, debug-master, architecture-designer, tech-doc-writer, general-purpose]
+- Required agents: select based on project context
 - Parallelizable: yes/no (check dependencies)
 - MCP needed: which servers
-- New skill/agent needed: yes/no
-- Hook needed: yes/no (auto-detect)
+- New skill/agent/hook needed: yes/no
 
-## 3. Model Selection (Performance First)
-Priority: Quality over cost savings
-- ONLY clearly simple (file search, short summary) → haiku
-- Ambiguous or medium → sonnet (default safe choice)
-- Complex (architecture, debug, multi-file, security) → opus
-- When in doubt → use higher model
+## 5. Model Selection (Performance First)
+- ONLY clearly simple → haiku
+- Ambiguous or medium → sonnet
+- Complex → opus
+- When in doubt → higher model
 
-## 4. Resource Decision
-- Existing agent sufficient? → use it
-- New agent needed? → create in:
-  - ~/.claude/agents/ (--save or reusable)
-  - ~/.claude/temp/agents/ (--temp, one-time)
-- New skill needed? → create in:
-  - ~/.claude/commands/ (--save)
-  - ~/.claude/temp/commands/ (--temp)
-- New hook needed? → create in:
-  - ~/.claude/hooks/custom/ (--save or reusable)
-  - ~/.claude/temp/hooks/ (--temp, one-time)
+## 6. Resource Decision
+- Existing agent sufficient? → use it (with project context)
+- New agent needed? → ~/.claude/agents/ or ~/.claude/temp/agents/
+- New skill needed? → ~/.claude/commands/ or ~/.claude/temp/commands/
+- New hook needed? → ~/.claude/hooks/custom/ or ~/.claude/temp/hooks/
 
-## 5. Hook Auto-Detection
+## 7. Hook Auto-Detection
 | Task Type | Hook Type | Action |
 |-----------|-----------|--------|
 | Code write/edit | PostToolUse | Auto format/lint |
 | File modification | PreToolUse | Secret check |
 | Build/deploy | PostToolUse | Run tests |
-| Session setup | SessionStart | Init environment |
 
-Hook creation process:
-1. Create script in hooks directory
-2. Backup settings.json
-3. Update settings.json with jq
-4. Confirm with user before applying
-
-## 6. MCP Recommendation
+## 8. MCP Recommendation
 | Task Type | MCP Server |
 |-----------|------------|
 | Web/crawl | puppeteer, playwright |
 | Database | postgres, sqlite |
 | Git/GitHub | github |
 | API test | fetch |
-| File heavy | filesystem |
 
-## 7. Report Plan (Korean)
+## 9. Report Plan (Korean)
 ```
 ## 실행 계획
+
+### 컨텍스트
+- 프로젝트: [감지된 타입]
+- 💡 [권장사항 - 있으면]
 
 ### 작업 분석
 - 복잡도: [단순/중간/복잡]
 - 병렬 처리: [가능/불가]
 
 ### 리소스
-- 모델: [haiku/sonnet/opus] - [선택 이유]
-- 에이전트: [목록] (신규 시: 1회성/영구)
-- 훅: [목록] (신규 시: 1회성/영구) ← 없으면 생략
-- MCP 추천: [목록] (필요시)
-
-### 예상
-- 토큰 비용: [낮음/중간/높음]
-- 품질 보장: [설명]
+- 모델: [haiku/sonnet/opus] - [이유]
+- 에이전트: [목록] (프로젝트 컨텍스트 반영)
+- 훅: [목록] (필요시)
+- MCP: [목록] (필요시)
 
 ---
 실행|수정|취소
 ```
 
-## 8. Execution
+## 10. Execution
 On "실행":
-1. Create temp directories if needed (mkdir -p ~/.claude/temp/{agents,commands,hooks})
-2. Create hooks if needed (script + settings.json update)
-3. Execute with Task tool
-   - Use selected model
-   - Parallel if safe, sequential if dependencies exist
-4. Provide full context to agents (don't cut corners)
-5. Report results with quality check
+1. Create temp directories if needed
+2. Create hooks if needed
+3. Execute with Task tool (parallel if safe)
+4. Provide full context including project type
+5. Report results
 
-## 9. Cleanup
-- Delete ~/.claude/temp/* after completion (if --temp used)
-- Restore settings.json if temp hooks were added
-- Report cleanup status
+## 11. Cleanup
+- Delete ~/.claude/temp/* if --temp
+- Restore settings.json if temp hooks
 
-## Quality Rules
+## Rules
 - NEVER sacrifice quality for token savings
 - Provide FULL context to agents
-- If result quality is poor → retry with higher model
+- Detect project type and adapt
 - Respond in Korean
-- --dry: show plan only, no execution
-- --no-hook: skip hook auto-detection
