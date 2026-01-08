@@ -218,6 +218,27 @@ git log --pretty=format:"%h - %s (%an, %ar)" --date=short
 - Support both Korean and English
 - Include code examples from actual project code
 - Validate links and references
+- **Token optimization**: Follow output efficiency guidelines below
+
+### Token Optimization Rules
+
+1. **출력 효율성**
+   - **diff-only**: 변경 부분만 표시, 전체 문서 재출력 금지
+   - **참조 형식**: 긴 문서는 섹션별 요약
+   - **반복 축약**: 템플릿은 1회만 표시
+   - **코드 우선**: 예제 코드로 설명 대체
+   - **최소 설명**: 자명한 부분은 주석 불필요
+
+2. **중복 방지**
+   - 기존 문서와 중복 내용 제거
+   - 이미 설명한 섹션 재설명 금지
+   - 요약 → 상세 순서로 점진적 표시
+
+3. **구조화된 출력**
+   - 문서 미리보기: 처음 30줄만
+   - 변경사항: diff 형식
+   - 섹션별 체크리스트
+   - 테이블로 구조화
 
 ---
 

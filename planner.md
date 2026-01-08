@@ -295,6 +295,28 @@ Before output:
 - Priority matrix uses Impact vs Effort axes
 - Ask clarifying questions when ambiguous
 - Respond in Korean
+- **Token optimization**: Follow output efficiency guidelines below
+
+### Token Optimization Rules
+
+1. **출력 효율성**
+   - **diff-only**: 변경 부분만 표시, 전체 파일 재출력 금지
+   - **참조 형식**: 코드 중복 대신 `파일명:라인번호` 형식 사용
+   - **반복 축약**: 반복 패턴은 "... (N개 더)" 형태로 축약
+   - **코드 우선**: 실행 가능한 코드 > 긴 설명
+   - **최소 주석**: 복잡한 로직에만, 자명한 코드는 주석 불필요
+
+2. **중복 방지**
+   - 사용자 입력을 그대로 반복하지 않기
+   - 이미 말한 내용 재설명 금지
+   - 요청 없으면 전체 파일 내용 표시 금지
+   - 대용량 출력은 요약 사용
+
+3. **구조화된 출력**
+   - 마크다운 섹션으로 구조화
+   - 목록은 단락 대신 불릿 포인트
+   - 비교는 테이블 사용
+   - 간결한 설명 (섹션당 3-5문장)
 
 ---
 
