@@ -4,7 +4,31 @@ description: Gemini 서브에이전트 호출 (user)
 
 Args: "$ARGUMENTS"
 
-## 0. Help System (First Priority)
+## 0. API Key Check (First Priority)
+
+Check Gemini API key:
+```bash
+if [ -z "$GEMINI_API_KEY" ] && [ ! -f ~/.gemini/config ]; then
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  echo "⚠️  Gemini API 키가 설정되지 않았습니다."
+  echo ""
+  echo "API 키 발급: https://aistudio.google.com/apikey"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  read -s -p "API 키 입력: " key
+  echo ""
+
+  mkdir -p ~/.gemini
+  echo "$key" > ~/.gemini/config
+  chmod 600 ~/.gemini/config
+  export GEMINI_API_KEY=$key
+
+  echo "✅ API 키가 설정되었습니다."
+elif [ -f ~/.gemini/config ]; then
+  export GEMINI_API_KEY=$(cat ~/.gemini/config)
+fi
+```
+
+## 1. Help System
 
 Check if args match help patterns:
 - `--help`
@@ -48,21 +72,21 @@ If help requested, show and exit:
   주제(-t) → Claude 주장 → Gemini 반박 → N회 반복 → 결론
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 1. Parse Options
+## 2. Parse Options
 Check args for options (in order):
 1. Model option: `-h` (haiku) | `-s` (sonnet) | `-o` (opus) | default (sonnet)
 2. Mode option: `-t` (debate mode) | default (normal mode)
 
 Remove parsed options from args, store remaining as query/topic.
 
-## 2. Option Detection
+## 3. Option Detection
 Routing logic:
 - If `-t` found → Debate Mode (Claude vs Gemini)
 - If `-t` not found → Normal Mode (simple query)
 
 ---
 
-## 3. Normal Mode (no -t flag)
+## 4. Normal Mode (no -t flag)
 Call: `gemini-agent "$QUERY"` (with model selected)
 
 After receiving result:
@@ -72,7 +96,7 @@ After receiving result:
 
 ---
 
-## 4. Debate Mode (-t flag)
+## 5. Debate Mode (-t flag)
 
 ### Usage
 `/gemini [-h/-s/-o] -t "주제"`
@@ -166,14 +190,15 @@ Extension: +10 per "계속"
 
 ---
 
-## 5. Model Usage
+## 6. Model Usage
 When calling gemini-agent:
 - Pass selected model (haiku/sonnet/opus) for consistency
 - Normal mode: Model affects response depth/quality
 - Debate mode: Model used for Claude's reasoning in each round
 
 ## Rules
-- Parse model and mode options FIRST before routing
+- Check API key FIRST (before any processing)
+- Parse model and mode options SECOND
 - Preserve `-t` debate mode functionality
 - Respond in Korean
 - Show ALL exchanges to user (both sides)
