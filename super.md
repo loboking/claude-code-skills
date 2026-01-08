@@ -83,6 +83,65 @@ else:
   TEMPLATE_MODE = "full"  # Default for complex requests
 ```
 
+## 1.4. Quality Check (Before Template Selection)
+
+**Critical keyword detection to prevent quality issues**:
+
+```
+if TEMPLATE_MODE == "ultra-compact":
+  # Extract and normalize text for keyword matching
+  CLEAN_TEXT = CLEAN_ARGS.lower()
+
+  # Define critical keywords that require detailed analysis
+  CRITICAL_KEYWORDS = [
+    # Payment/Finance
+    "결제", "payment", "금융", "finance", "트랜잭션", "transaction",
+    "pg", "billing", "invoice", "refund", "환불",
+
+    # Security/Auth
+    "인증", "auth", "authentication", "authorization", "인가",
+    "보안", "security", "암호화", "encryption", "토큰", "token",
+    "세션", "session", "oauth", "jwt", "password", "비밀번호",
+
+    # Critical Operations
+    "마이그레이션", "migration", "배포", "deploy", "production", "프로덕션",
+    "삭제", "delete", "제거", "remove", "drop",
+
+    # Complex Features
+    "아키텍처", "architecture", "설계", "design",
+    "최적화", "optimization", "performance", "성능"
+  ]
+
+  DETECTED_KEYWORDS = [kw for kw in CRITICAL_KEYWORDS if kw in CLEAN_TEXT]
+
+  if DETECTED_KEYWORDS:
+    OUTPUT WARNING:
+    "⚠️ 복잡한 요청 감지됨
+
+    **감지된 키워드**: {', '.join(DETECTED_KEYWORDS)}
+
+    **현재 모드**: Ultra-Compact (간략 분석)
+    **권장 모드**: Full (상세 분석)
+
+    Ultra-Compact 모드는 다음을 생략합니다:
+    - 보안 고려사항
+    - 상세한 예외 처리
+    - 성능 최적화 전략
+    - 테스트 시나리오
+
+    **권장 사항**:
+    1. 요청을 30단어 이상으로 상세히 작성 (자동 Full 모드)
+    2. 또는 보안/예외처리/테스트 요구사항 명시
+
+    계속하시겠습니까? (y = Ultra-Compact 유지 | n = Full 모드 전환)"
+
+    if user_response == "n" OR user_response == "no" OR user_response == "아니오":
+      TEMPLATE_MODE = "full"
+      OUTPUT: "✅ Full 모드로 전환합니다. 상세 분석을 진행합니다."
+    else:
+      OUTPUT: "⚠️ Ultra-Compact 모드로 계속합니다. 간략 분석만 제공됩니다."
+```
+
 ## 1.5. Template Selection (Based on Parsed Mode)
 
 ### Ultra-Compact Template (TEMPLATE_MODE = "ultra-compact")
