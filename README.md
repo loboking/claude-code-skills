@@ -44,11 +44,14 @@ rm ~/.gemini/config
 
 ```bash
 # 기존 방식
-/gemini, /super, /duo, /run, /smart-brain, /project-init
+/gemini, /duo, /run, /planner, /doc-writer, /smart-brain, /project-init
 
 # monggle 접두사 (Tab 자동완성)
-/monggle-gemini, /monggle-super, /monggle-duo
-/monggle-run, /monggle-brain, /monggle-init
+/monggle-gemini, /monggle-duo, /monggle-run
+/monggle-planner, /monggle-doc-writer
+/monggle-brain, /monggle-init
+
+# /super는 /planner로 통합되었습니다
 ```
 
 **장점**:
@@ -207,7 +210,78 @@ cd /your/project
 
 ---
 
-### 6. `/project-init` - 스마트 프로젝트 초기화
+### 6. `/planner` - 프로젝트 기획서 작성 ⭐ NEW
+
+아이디어를 상세 기획서로 자동 변환합니다 (기존 /super 기능 통합).
+
+**사용법**:
+```bash
+# 기본: 간단 요청 → 상세 요구사항 (기존 /super)
+/planner 로그인 기능 추가
+
+# 전체 기획서
+/planner --full "Todo 앱 만들기"
+
+# 사용자 스토리 생성
+/planner --story "사용자가 할 일을 추가할 수 있다"
+
+# 기능 우선순위 매트릭스
+/planner --priority
+```
+
+**모드**:
+- **기본 모드**: 간단 요청 → 상세 요구사항 (기존 /super 호환)
+- **--full**: 빈 상태 → 전체 프로젝트 기획서
+- **--story**: 기능 → Given-When-Then 사용자 스토리
+- **--priority**: 기능 우선순위 매트릭스 (중요도 vs 난이도)
+- **--scope**: 프로젝트 범위 정의 (In/Out of Scope)
+- **--interactive**: 대화형 기획 (질문-답변)
+
+**특징**:
+- 🔄 /super 기능 완전 통합 (하위 호환성 유지)
+- 📋 사용자 스토리 자동 생성
+- 🎯 우선순위 매트릭스 (Quick Wins 식별)
+- 💬 대화형 기획 지원
+- 📊 측정 가능한 성공 지표 제시
+
+---
+
+### 7. `/doc-writer` - 문서 자동 생성 ⭐ NEW
+
+프로젝트 문서를 자동으로 생성하고 업데이트합니다.
+
+**사용법**:
+```bash
+# README 생성
+/doc-writer readme
+
+# API 문서 생성
+/doc-writer api
+
+# 모든 문서 생성
+/doc-writer all
+
+# 영문 가이드
+/doc-writer guide --lang en
+```
+
+**문서 타입**:
+- **readme**: 프로젝트 소개, 설치, 사용법
+- **api**: API 문서 (OpenAPI/Swagger 기반)
+- **guide**: 사용자 가이드/튜토리얼
+- **changelog**: Git 히스토리 기반 변경 이력
+- **contributing**: 기여 가이드
+
+**특징**:
+- 🔍 코드 분석 자동화 (LSP 활용)
+- 📝 프로젝트 타입별 템플릿 (React, Python, Go 등)
+- 🌐 다국어 지원 (한글/영문 자동 감지)
+- 🔄 기존 문서 업데이트 (백업 후 병합)
+- 💡 실제 코드에서 예제 추출
+
+---
+
+### 8. `/project-init` - 스마트 프로젝트 초기화
 
 Plan Mode로 프로젝트 구조를 설계한 후 자동으로 초기화합니다.
 
