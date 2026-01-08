@@ -8,6 +8,36 @@
 git clone https://github.com/loboking/claude-code-skills.git ~/.claude/commands
 ```
 
+## 🔑 Gemini API 키 설정
+
+`/gemini`와 `/duo` 스킬은 Gemini API를 사용합니다. 처음 사용 시 API 키를 입력하면 자동으로 저장됩니다.
+
+**자동 설정** (권장):
+```bash
+/gemini 테스트 질문
+# → API 키 입력 프롬프트 표시
+# → ~/.gemini/config에 안전하게 저장 (권한 600)
+```
+
+**수동 설정**:
+```bash
+# API 키 발급: https://aistudio.google.com/apikey
+mkdir -p ~/.gemini
+echo "YOUR_API_KEY_HERE" > ~/.gemini/config
+chmod 600 ~/.gemini/config
+```
+
+**API 키 변경**:
+```bash
+rm ~/.gemini/config
+/gemini 질문  # 새 키 입력 요청
+```
+
+**보안**:
+- API 키는 `~/.gemini/config`에 로컬 저장 (Git 추적 제외)
+- 파일 권한 600으로 소유자만 접근 가능
+- 스킬 코드에 하드코딩 금지
+
 ## 🏷️ monggle- 접두사
 
 모든 스킬은 `monggle-` 접두사로도 사용 가능합니다 (자동완성 활용):
@@ -85,9 +115,9 @@ Exceptions/Tests: [필요시]
 
 ---
 
-### 3. `/duo` - Claude + Gemini 협업
+### 3. `/duo` - Claude + Gemini 동적 협업
 
-Claude와 Gemini가 2회 핑퐁 후 합의하여 구현합니다.
+Claude와 Gemini가 합의할 때까지 동적으로 협업합니다 (1-5라운드).
 
 **사용법**:
 ```bash
@@ -99,16 +129,19 @@ Claude와 Gemini가 2회 핑퐁 후 합의하여 구현합니다.
 
 **워크플로우**:
 1. **Phase 1**: Super 프롬프트 분석
-2. **Phase 2**: Gemini 2회 협업
-   - Round 1: Gemini 의견 수렴
+2. **Phase 2**: Gemini 동적 협업
+   - Round 1: Gemini 초기 의견
    - Round 2: Claude 접근법 피드백
+   - Round 3+: 이견 조율 (필요 시, 최대 5라운드)
+   - 합의 도달 시 자동 종료
 3. **Phase 3**: 합의 사항 보고
 4. 사용자 확인 후 실행
 
 **특징**:
-- 두 AI의 강점 결합
-- 투명한 의견 공개
-- 갈등 시 사용자 결정
+- 🔄 AI 주도 동적 라운드 (고정 횟수 없음)
+- 🎯 합의 레벨 자동 판단 (키워드 분석)
+- 📊 라운드별 과정 투명하게 공개
+- 💡 갈등 시 사용자 결정
 
 ---
 
