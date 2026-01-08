@@ -39,6 +39,7 @@ If help requested, show and exit:
   -h, --haiku      빠른 실행 (간단한 기획)
   -s, --sonnet     균형 잡힌 성능 (기본값)
   -o, --opus       최고 품질 (복잡한 기획)
+  --compact        간결 모드 (자동 감지: <15단어=초간결, <30단어=간결)
   --template <id>  특정 템플릿 사용
   --interactive    대화형 기획 (질문-답변)
   --help           이 도움말 표시
@@ -71,6 +72,68 @@ If help requested, show and exit:
   🎯 우선순위 매트릭스
   💬 대화형 기획 지원
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+## 0.5. Smart Compact Detection (Token Optimization)
+
+**Before any processing**, detect if compact mode should be used:
+
+```
+WORD_COUNT = count words in ARGUMENTS (excluding flags)
+HAS_MODE_FLAGS = contains any of: --full, --story, --scope, --priority, --interactive
+
+if HAS_MODE_FLAGS:
+  → Use Full Template (user explicitly requested complex mode)
+elif WORD_COUNT < 15:
+  → Use Ultra-Compact Template (500 tokens)
+elif WORD_COUNT < 30:
+  → Use Compact Template (800 tokens)
+else:
+  → Use Full Template (2,300 tokens)
+```
+
+### Ultra-Compact Template (<15 words)
+```markdown
+## 요구사항 분석
+
+**Goal**: [1문장 요약]
+
+**구현 요소**:
+- [핵심 기능 1]
+- [핵심 기능 2]
+- [핵심 기능 3]
+
+**주의사항**: [1-2가지]
+
+**다음 단계**: [즉시 실행 가능한 액션]
+```
+
+### Compact Template (15-29 words)
+```markdown
+## 상세 요구사항
+
+**Goal**: [한 문장 요약]
+
+**Requirements**:
+1. [기능 요구사항 1]
+2. [기능 요구사항 2]
+3. [기능 요구사항 3]
+
+**Tech Spec**:
+- Framework: [감지된 프레임워크]
+- Files: [파일 경로 목록]
+
+**Edge Cases**: [2-3가지]
+
+**Testing**: [필수 테스트만]
+
+---
+실행|수정|취소
+```
+
+### Full Template (30+ words or mode flags)
+Use the complete templates described in sections below.
+
+---
 
 ## 1. Parse Options
 
