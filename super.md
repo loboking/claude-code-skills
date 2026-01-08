@@ -59,23 +59,33 @@ If help requested, show and exit:
   💾 토큰 최적화 (자동 간결 모드)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-## 0.5. Smart Compact Detection (Token Optimization)
+## 1. Parse Options and Smart Compact Detection (FIRST - Token Optimization)
 
-**Before any processing**, detect if compact mode should be used:
+**Extract flags first**, then determine template mode:
 
 ```
-WORD_COUNT = count words in ARGUMENTS (excluding flags)
-HAS_COMPACT_FLAG = contains '--compact'
+# Step 1: Parse and extract flags
+MODEL = extract_model_flag(-h, -s, -o) | default: sonnet
+COMPACT_FLAG = extract_flag(--compact)
 
-if HAS_COMPACT_FLAG OR WORD_COUNT < 15:
-  → Use Ultra-Compact Template (500 tokens)
+# Step 2: Count words (excluding ALL extracted flags)
+CLEAN_ARGS = remove all extracted flags from ARGUMENTS
+WORD_COUNT = count words in CLEAN_ARGS
+
+# Step 3: Determine template mode
+if COMPACT_FLAG:
+  TEMPLATE_MODE = "ultra-compact"  # Explicit user request
+elif WORD_COUNT < 15:
+  TEMPLATE_MODE = "ultra-compact"  # Auto-detect
 elif WORD_COUNT < 30:
-  → Use Compact Template (800 tokens)
+  TEMPLATE_MODE = "compact"  # Auto-detect
 else:
-  → Use Full Template (2,300 tokens)
+  TEMPLATE_MODE = "full"  # Default for complex requests
 ```
 
-### Ultra-Compact Template (<15 words or --compact)
+## 1.5. Template Selection (Based on Parsed Mode)
+
+### Ultra-Compact Template (TEMPLATE_MODE = "ultra-compact")
 ```markdown
 ## 요구사항 분석
 
@@ -91,7 +101,7 @@ else:
 **다음 단계**: [즉시 실행 가능한 액션]
 ```
 
-### Compact Template (15-29 words)
+### Compact Template (TEMPLATE_MODE = "compact")
 ```markdown
 ## 상세 요구사항
 
@@ -114,19 +124,19 @@ else:
 실행|수정|취소
 ```
 
-### Full Template (30+ words)
+### Full Template (TEMPLATE_MODE = "full")
 Use the complete template described below.
 
 ---
 
-## 1. Analyze Intent (WHO/WHAT/WHY)
+## 2. Analyze Intent (WHO/WHAT/WHY) - For Full Template Only
 
 Parse the user's request to understand:
 - **WHO**: Target users/stakeholders
 - **WHAT**: Specific functionality requested
 - **WHY**: Business value/problem being solved
 
-## 2. Check Project Context
+## 3. Check Project Context
 
 Use Glob/Grep to detect:
 - **Project type**: package.json (Node), requirements.txt (Python), go.mod (Go), etc.
@@ -134,7 +144,7 @@ Use Glob/Grep to detect:
 - **Existing patterns**: Authentication, API structure, testing setup
 - **Tech stack**: Database, state management, build tools
 
-## 3. Derive Requirements
+## 4. Derive Requirements
 
 ### Functional Requirements
 - Core features needed
@@ -159,7 +169,7 @@ Use Glob/Grep to detect:
 - E2E test flows
 - Performance benchmarks
 
-## 4. Output Format (Full Template)
+## 5. Output Format (Full Template)
 
 ```markdown
 ## 상세 요구사항

@@ -44,14 +44,16 @@ rm ~/.gemini/config
 
 ```bash
 # 기존 방식
-/gemini, /duo, /run, /planner, /doc-writer, /smart-brain, /project-init
+/super, /gemini, /duo, /run, /planner, /doc-writer, /smart-brain, /project-init
 
 # monggle 접두사 (Tab 자동완성)
-/monggle-gemini, /monggle-duo, /monggle-run
+/monggle-super, /monggle-gemini, /monggle-duo, /monggle-run
 /monggle-planner, /monggle-doc-writer
 /monggle-brain, /monggle-init
 
-# /super는 /planner로 통합되었습니다
+# 참고: /super와 /planner는 별도 스킬입니다
+# - /super: 간단 요청 → 상세 요구사항 (토큰 최적화)
+# - /planner: 프로젝트 기획서 작성 (super 기능 + 추가 모드)
 ```
 
 **장점**:
