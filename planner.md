@@ -1,5 +1,5 @@
 ---
-allowed-tools: Read, Grep, Glob, Bash, Edit, Write, Task
+allowed-tools: Read, Grep, Glob, Bash, Edit, Write
 description: 프로젝트 기획서 작성 및 요구사항 상세화 (super 기능 통합) (user)
 ---
 

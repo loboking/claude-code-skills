@@ -1,5 +1,5 @@
 ---
-allowed-tools: AskUserQuestion, EnterPlanMode, Bash, Write, Edit, Read, Glob, Grep, TodoWrite
+allowed-tools: AskUserQuestion, EnterPlanMode, Bash, Write, Edit, Read, Glob, Grep
 description: Smart project initialization with plan mode (user)
 ---
 
