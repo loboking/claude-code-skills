@@ -1,0 +1,3 @@
+README.md 파일에 "## License" 섹션 추가해줘.
+
+MIT License로 설정.
