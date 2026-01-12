@@ -1,0 +1,41 @@
+# API Keys and Credentials
+*.key
+*.pem
+*.p12
+*config
+!.common/**
+oauth_creds.json
+google_accounts.json
+settings.json
+state.json
+
+# Environment Files
+.env
+.env.local
+.env.*.local
+
+# User-specific Files
+installation_id
+
+# Temporary Files
+tmp/
+*.tmp
+*.log
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDE Files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Backup Files
+*.bak
+*.orig
+
+# Benchmark Results
+benchmark/results/*.json
+benchmark/results/*.md
