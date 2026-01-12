@@ -1,6 +1,6 @@
-# Claude Code Custom Skills
+# Claude Code Custom Skills & Agents
 
-커스텀 Claude Code 스킬 및 에이전트 모음입니다.
+Claude Code용 커스텀 스킬 및 에이전트 모음입니다.
 
 ## 설치
 
@@ -30,9 +30,9 @@ chmod 600 ~/.gemini/config
 
 | 방식 | 예시 | 특징 |
 |-----|------|------|
-| **@ 멘션** | `@agent-duo implement feature` | 자동완성 지원 |
+| **@ 멘션** | `@agent-duo implement feature` | 자동완성 지원 (권장) |
 | **자연어** | `Use duo to implement feature` | 직접 호출 |
-| **슬래시** | `/duo implement feature` | 기존 방식 |
+| **슬래시** | `/duo implement feature` | 레거시 방식 |
 
 **@ 멘션 사용법:**
 ```bash
@@ -41,9 +41,23 @@ chmod 600 ~/.gemini/config
 @agent-run    # run 에이전트
 ```
 
-## 에이전트 목록
+---
 
-### duo - Claude + Gemini 동적 협업
+## 성능 지표 범례
+
+각 에이전트의 성능 특성을 한눈에 파악할 수 있습니다:
+
+| 지표 | 설명 |
+|-----|------|
+| **속도** | ⚡⚡⚡ 빠름 → ⚡⚡ 보통 → ⚡ 느림 → 🐌 매우 느림 |
+| **토큰** | 💰 낮음 → 💰💰 중간 → 💰💰💰 높음 |
+| **품질** | ⭐⭐⭐ 양호 → ⭐⭐⭐⭐ 우수 → ⭐⭐⭐⭐⭐ 최고 |
+
+---
+
+## 주요 에이전트
+
+### 🤝 duo - Claude + Gemini 동적 협업
 
 Claude와 Gemini가 합의할 때까지 동적으로 협업합니다.
 
@@ -52,6 +66,13 @@ Claude와 Gemini가 합의할 때까지 동적으로 협업합니다.
 @agent-duo -o 결제 시스템 아키텍처
 ```
 
+| 속성 | 값 |
+|-----|-----|
+| **속도** | 🐌 느림 (다중 라운드) |
+| **토큰** | 💰💰💰 높음 |
+| **품질** | ⭐⭐⭐⭐⭐ 최고 |
+| **사용 시기** | 복잡한 설계 결정 |
+
 **사용 시기:**
 - 설계 검증이 필요한 복잡한 구현
 - 여러 접근법 비교 필요
@@ -59,7 +80,7 @@ Claude와 Gemini가 합의할 때까지 동적으로 협업합니다.
 
 ---
 
-### run - 스마트 오케스트레이터
+### 🎯 run - 스마트 오케스트레이터
 
 작업 복잡도를 분석하여 최적의 모델/에이전트를 자동 선택합니다.
 
@@ -69,6 +90,13 @@ Claude와 Gemini가 합의할 때까지 동적으로 협업합니다.
 @agent-run -o 전체 아키텍처 설계   # opus로 즉시 실행
 ```
 
+| 속성 | 값 |
+|-----|-----|
+| **속도** | ⚡ 가변 (선택된 모델에 따라) |
+| **토큰** | 💰 가변 |
+| **품질** | ⭐⭐⭐⭐ 최적화됨 |
+| **특징** | 자동 모델 선택 |
+
 **옵션:**
 - `-h` : haiku (빠른 실행)
 - `-s` : sonnet (기본값)
@@ -76,7 +104,7 @@ Claude와 Gemini가 합의할 때까지 동적으로 협업합니다.
 
 ---
 
-### super - 슈퍼 프롬프트 생성
+### ⚡ super - 슈퍼 프롬프트 생성
 
 간단한 요청을 상세 요구사항으로 자동 확장합니다.
 
@@ -85,6 +113,13 @@ Claude와 Gemini가 합의할 때까지 동적으로 협업합니다.
 @agent-super --compact API 엔드포인트
 ```
 
+| 속성 | 값 |
+|-----|-----|
+| **속도** | ⚡⚡ 빠름 |
+| **토큰** | 💰 낮음 |
+| **품질** | ⭐⭐⭐⭐ 우수 |
+| **특징** | 간결 모드 지원 |
+
 **자동 간결 모드:**
 - <15단어: Ultra-Compact
 - 15-29단어: Compact
@@ -92,7 +127,7 @@ Claude와 Gemini가 합의할 때까지 동적으로 협업합니다.
 
 ---
 
-### gemini - Gemini 서브에이전트
+### 🤖 gemini - Gemini 서브에이전트
 
 Gemini AI를 호출하거나 논쟁 모드를 실행합니다.
 
@@ -101,16 +136,178 @@ Gemini AI를 호출하거나 논쟁 모드를 실행합니다.
 @agent-gemini -t "TDD vs BDD"      # 논쟁 모드
 ```
 
+| 속성 | 값 |
+|-----|-----|
+| **속도** | ⚡⚡⚡ 매우 빠름 |
+| **토큰** | 💰 낮음 (Gemini API) |
+| **품질** | ⭐⭐⭐ 양호 |
+| **특징** | 논쟁 모드 지원 |
+
 ---
 
-### planner - 프로젝트 기획서 작성
+## 개발 지원 에이전트
+
+### 🏗️ architecture-designer - 아키텍처 설계
+
+시스템 아키텍처 설계 및 기술 스택 평가를 지원합니다.
+
+```bash
+@agent-architecture-designer
+```
+
+| 속성 | 값 |
+|-----|-----|
+| **속도** | ⚡⚡ 보통 |
+| **토큰** | 💰💰 중간 |
+| **품질** | ⭐⭐⭐⭐⭐ 최고 |
+| **모델** | sonnet |
+
+**사용 시기:**
+- 새 프로젝트 아키텍처 설계
+- 기존 시스템 리팩토링
+- 디자인 패턴 선택
+
+---
+
+### 🔍 code-reviewer - 코드 리뷰
+
+구현 완료 후 코드 품질을 검토합니다.
+
+```bash
+@agent-code-reviewer
+```
+
+| 속성 | 값 |
+|-----|-----|
+| **속도** | ⚡⚡ 빠름 |
+| **토큰** | 💰 낮음 |
+| **품질** | ⭐⭐⭐⭐ 우수 |
+| **모델** | sonnet |
+
+**리뷰 영역:**
+- 베스트 프랙티스 준수
+- 잠재적 버그 발견
+- 성능 최적화 제안
+
+---
+
+### 🐛 debug-master - 디버깅 전문가
+
+복잡한 버그를 체계적으로 분석하고 해결합니다.
+
+```bash
+@agent-debug-master
+```
+
+| 속성 | 값 |
+|-----|-----|
+| **속도** | ⚡ 느림 (체계적 분석) |
+| **토큰** | 💰💰 중간 |
+| **품질** | ⭐⭐⭐⭐⭐ 최고 |
+| **모델** | sonnet |
+
+**전문 분야:**
+- 크래시 분석
+- 성능 병목 진단
+- 메모리 누수 추적
+
+---
+
+### 🎨 frontend-designer - 프론트엔드 디자인
+
+톤앤매너 일치 + 무료 리소스 + 최신 트렌드 디자인을 제공합니다.
+
+```bash
+@agent-frontend-designer
+```
+
+| 속성 | 값 |
+|-----|-----|
+| **속도** | ⚡⚡ 보통 |
+| **토큰** | 💰💰 중간 |
+| **품질** | ⭐⭐⭐⭐ 우수 |
+| **특징** | Anti-AI 디자인 |
+
+---
+
+### 🔐 git-guardian - Git 워크플로우
+
+안전한 Git 워크플로우 자동화 - Secrets 스캔 + 구조화된 커밋 메시지
+
+```bash
+@agent-git-guardian
+```
+
+| 속성 | 값 |
+|-----|-----|
+| **속도** | ⚡⚡⚡ 빠름 |
+| **토큰** | 💰 낮음 |
+| **품질** | ⭐⭐⭐⭐ 우수 |
+| **특징** | Secrets 스캔 |
+
+---
+
+### 🎯 precision-debugger - 정밀 디버깅
+
+표적 항암치료처럼 복잡하고 재현 어려운 버그를 정밀하게 추적합니다.
+
+```bash
+@agent-precision-debugger
+```
+
+| 속성 | 값 |
+|-----|-----|
+| **속도** | 🐌 매우 느림 (정밀 분석) |
+| **토큰** | 💰💰💰 높음 |
+| **품질** | ⭐⭐⭐⭐⭐ 최고 |
+| **특징** | 재현 어려운 버그 전문 |
+
+---
+
+### 📋 product-manager - 제품 관리
+
+PRD 작성, 사용자 스토리 정의, 기능 우선순위 설정을 지원합니다.
+
+```bash
+@agent-product-manager
+```
+
+| 속성 | 값 |
+|-----|-----|
+| **속도** | ⚡⚡ 보통 |
+| **토큰** | 💰💰 중간 |
+| **품질** | ⭐⭐⭐⭐ 우수 |
+| **모델** | sonnet |
+
+---
+
+### 📝 tech-doc-writer - 기술 문서 작성
+
+API 문서, 사용자 가이드, 아키텍처 문서를 자동 생성합니다.
+
+```bash
+@agent-tech-doc-writer
+```
+
+| 속성 | 값 |
+|-----|-----|
+| **속도** | ⚡⚡ 빠름 |
+| **토큰** | 💰 낮음 |
+| **품질** | ⭐⭐⭐⭐ 우수 |
+| **모델** | sonnet |
+
+---
+
+## 프로젝트 관리 에이전트
+
+### 📋 planner - 프로젝트 기획서 작성
 
 아이디어를 상세 기획서로 변환합니다.
 
 ```bash
-@agent-planner 로그인 기능 추가
-@agent-planner --full "Todo 앱"
-@agent-planner --story "할 일 추가"
+/planner 로그인 기능 추가
+/planner --full "Todo 앱"
+/planner --story "할 일 추가"
 ```
 
 **모드:**
@@ -121,20 +318,20 @@ Gemini AI를 호출하거나 논쟁 모드를 실행합니다.
 
 ---
 
-### project-init - 스마트 프로젝트 초기화
+### 🚀 project-init - 스마트 프로젝트 초기화
 
 Plan Mode로 프로젝트를 설계하고 자동 초기화합니다.
 
 ```bash
-@agent-project-init react
-@agent-project-init -t nextjs -n my-app
+/project-init react
+/project-init -t nextjs -n my-app
 ```
 
 **지원:** React, Next.js, Flutter, Android, iOS, Spring Boot, FastAPI, Go, Rust
 
 ---
 
-## 스킬 목록 (슬래시 명령어)
+## 스킬 (슬래시 명령어)
 
 에이전트가 아닌 단순 스킬:
 
@@ -162,24 +359,34 @@ Plan Mode로 프로젝트를 설계하고 자동 초기화합니다.
 ## 파일 구조
 
 ```
-~/.claude/
-├── commands/           # 스킬 (슬래시 명령어)
-│   ├── duo.md         # → 에이전트 안내
-│   ├── run.md         # → 에이전트 안내
-│   ├── super.md       # → 에이전트 안내
-│   ├── gemini.md      # → 에이전트 안내
-│   ├── planner.md     # 스킬 (상세 로직)
+~/.claude/commands/
+├── agents/                    # 에이전트 정의 (YAML frontmatter)
+│   ├── duo.md                # Claude + Gemini 협업
+│   ├── run.md                # 스마트 오케스트레이터
+│   ├── super.md              # 슈퍼 프롬프트
+│   ├── gemini.md             # Gemini 서브에이전트
+│   ├── architecture-designer.md
+│   ├── code-reviewer.md
+│   ├── debug-master.md
+│   ├── frontend-designer.md
+│   ├── git-guardian.md
+│   ├── precision-debugger.md
+│   ├── product-manager.md
+│   ├── tech-doc-writer.md
+│   └── monggle-*             # monggle 접두사 버전
+│
+├── commands/                  # 스킬 (슬래시 명령어용)
+│   ├── duo.md                # → agents/duo.md 안내
+│   ├── run.md                # → agents/run.md 안내
+│   ├── planner.md            # 스킬 (상세 로직)
 │   ├── project-init.md
 │   ├── doc-writer.md
 │   ├── smart-brain.md
-│   └── monggle-*      # 심볼릭 링크
+│   └── monggle-*             # 심볼릭 링크
 │
-└── agents/             # 에이전트 (상세 로직)
-    ├── monggle-duo.md
-    ├── monggle-run.md
-    ├── monggle-super.md
-    ├── monggle-gemini.md
-    └── duo.md, run.md, etc.  # 심볼릭 링크
+└── .common/                   # 공통 템플릿
+    ├── TOKEN_OPTIMIZATION_TEMPLATE.md
+    └── GEMINI_API_KEY_CHECK_TEMPLATE.md
 ```
 
 ---
@@ -188,7 +395,7 @@ Plan Mode로 프로젝트를 설계하고 자동 초기화합니다.
 
 ### 새 프로젝트 시작
 ```bash
-@agent-project-init react
+/project-init react
 # → Plan Mode → 승인 → 자동 초기화
 ```
 
@@ -204,19 +411,40 @@ Plan Mode로 프로젝트를 설계하고 자동 초기화합니다.
 # → Claude + Gemini 협업 → 합의 기반 구현
 ```
 
-### 대규모 작업
+### 코드 리뷰
 ```bash
-@agent-run -o 전체 리팩토링
-# → Opus 자동 선택 → 최적 실행
+@agent-code-reviewer
+# → 최근 변경 코드 분석 → 개선 제안
+```
+
+### 버그 디버깅
+```bash
+@agent-debug-master
+# → 체계적 분석 → 근본 원인 파악 → 해결
 ```
 
 ---
 
 ## 요구사항
 
-- **Claude Code CLI**: 최신 버전
+- **Claude Code CLI**: v1.0.62+ (@ 멘션 지원)
 - **Gemini API**: `gemini`, `duo` 에이전트용
 - **Git**: 저장소 관리
+
+---
+
+## 설치 확인
+
+```bash
+# 에이전트 자동완성 테스트
+@agent-<Tab>
+
+# 스킬 목록 확인
+ls ~/.claude/commands/*.md
+
+# Gemini API 테스트
+@agent-gemini hello
+```
 
 ---
 
