@@ -5,8 +5,17 @@ Claude Code용 커스텀 스킬 및 에이전트 모음입니다.
 ## 설치
 
 ```bash
+# 1. Repository 클론
 git clone https://github.com/loboking/claude-code-skills.git ~/.claude/commands
+
+# 2. 설치 스크립트 실행 (필수!)
+cd ~/.claude/commands
+./install.sh
+
+# 3. Claude Code CLI 재시작
 ```
+
+**⚠️ 중요:** `install.sh`를 반드시 실행해야 에이전트가 작동합니다!
 
 ## Gemini API 키 설정
 
