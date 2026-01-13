@@ -1,6 +1,6 @@
-# Claude Code Custom Skills & Agents
+# Monggle Agent Toolkit
 
-Claude Code용 커스텀 스킬 및 에이전트 모음입니다.
+Claude Code를 위한 AI 에이전트 모음 - Claude + Gemini 협업, 스마트 오케스트레이션, 개발 자동화
 
 ## 설치
 
