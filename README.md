@@ -1,21 +1,124 @@
 # Monggle Agent Toolkit
 
-Claude Code를 위한 AI 에이전트 모음 - Claude + Gemini 협업, 스마트 오케스트레이션, 개발 자동화
+**Claude Code & Antigravity**를 위한 AI 에이전트 모음 - Claude + Gemini 협업, 스마트 오케스트레이션, 개발 자동화
 
-## 설치
+> 🎯 **두 플랫폼 모두 지원**: Claude Code와 Google Antigravity에서 동일한 스킬 사용 가능!
 
+## 🚀 빠른 설치 (다른 PC에서도 동일)
+
+### 1. 전제 조건
+- **Claude Code CLI** v1.0.62 이상 설치 필요
+  - 설치: https://claude.ai/download
+  - 확인: 터미널에서 `claude --version`
+
+### 2. 설치 명령어
+```bash
+# 한 줄 설치 (복사 후 붙여넣기)
+git clone https://github.com/loboking/claude-code-skills.git ~/.claude/commands && cd ~/.claude/commands && ./install.sh
+```
+
+**또는 단계별 설치:**
 ```bash
 # 1. Repository 클론
 git clone https://github.com/loboking/claude-code-skills.git ~/.claude/commands
 
-# 2. 설치 스크립트 실행 (필수!)
+# 2. 디렉토리 이동
 cd ~/.claude/commands
+
+# 3. 설치 스크립트 실행 (필수!)
 ./install.sh
 
-# 3. Claude Code CLI 재시작
+# 4. Claude Code CLI 재시작
 ```
 
-**⚠️ 중요:** `install.sh`를 반드시 실행해야 에이전트가 작동합니다!
+### 3. 설치 확인
+```bash
+# Skill 목록 확인
+ls ~/.claude/commands/*.md | grep -v README
+
+# Agent 목록 확인
+ls ~/.claude/agents/*.md | head -5
+
+# 테스트 실행
+claude-code
+# 그 후 채팅에서: /doc-writer --help
+```
+
+**⚠️ 중요:**
+- `install.sh`를 반드시 실행해야 Agent가 작동합니다
+- Skill은 바로 사용 가능 (install.sh 없이도 동작)
+- Agent는 install.sh가 `~/.claude/agents/`에 파일 복사
+
+---
+
+## 🌟 Antigravity에서 사용하기
+
+**Google Antigravity**도 스킬 시스템을 지원합니다!
+
+### Antigravity란?
+- Google의 AI 코딩 도구
+- Claude Code와 유사한 skills 시스템
+- 스킬 구조: `SKILL.md` + `scripts/` + `references/`
+
+### 설치 방법
+
+#### 1️⃣ 전역 설치 (모든 프로젝트에서 사용)
+```bash
+# Antigravity 전역 스킬 디렉토리에 클론
+git clone https://github.com/loboking/claude-code-skills.git ~/.gemini/antigravity/skills/monggle-toolkit
+
+# 설치 확인
+ls ~/.gemini/antigravity/skills/monggle-toolkit/*.md
+```
+
+#### 2️⃣ 워크스페이스 설치 (특정 프로젝트만)
+```bash
+# 프로젝트 디렉토리에서 실행
+cd <your-project>
+
+# .agent/skills 디렉토리에 클론
+git clone https://github.com/loboking/claude-code-skills.git .agent/skills/monggle-toolkit
+
+# 설치 확인
+ls .agent/skills/monggle-toolkit/*.md
+```
+
+### Antigravity 스킬 구조
+
+```
+~/.gemini/antigravity/skills/monggle-toolkit/  (전역)
+또는
+<workspace>/.agent/skills/monggle-toolkit/      (워크스페이스)
+│
+├── duo.md                # Claude + Gemini 협업
+├── gemini.md             # Gemini AI 호출
+├── run.md                # 스마트 오케스트레이터
+├── super.md              # 슈퍼 프롬프트 생성
+├── doc-writer.md         # 문서 자동 생성
+├── smart-brain.md        # 토큰 최적화
+└── project-init.md       # 프로젝트 초기화
+```
+
+### 사용 방법
+
+Antigravity에서 스킬 사용:
+```bash
+# Antigravity AI 채팅에서
+/duo 로그인 기능 추가
+/doc-writer readme
+/gemini Python 설명해줘
+```
+
+**참고:**
+- Antigravity는 `@agent-*` 형식은 지원하지 않습니다
+- `/스킬명` 형식만 사용 (Skill 방식)
+- 스크립트 실행 지원 (Python, Bash, Node, Go)
+
+### 참고 자료
+- [Antigravity Skills 샘플](https://github.com/pjt3591oo/antigravity-skills)
+- [Antigravity Skills 시작하기](https://blog.naver.com/pjt3591oo/224147187928)
+
+---
 
 ## Gemini API 키 설정
 
@@ -584,11 +687,63 @@ Claude: "`/run`으로 복잡도를 분석하고 최적 모델을 추천해드릴
 
 ---
 
-## 요구사항
+## 🔧 문제 해결
+
+### Skill이 작동 안 함
+```bash
+# 1. 파일 존재 확인
+ls ~/.claude/commands/*.md
+
+# 2. 권한 확인
+chmod +x ~/.claude/commands/*.md
+
+# 3. Claude Code 재시작
+```
+
+### Agent가 작동 안 함
+```bash
+# 1. install.sh 실행 확인
+cd ~/.claude/commands && ./install.sh
+
+# 2. Agent 파일 확인
+ls ~/.claude/agents/*.md
+
+# 3. Claude Code 재시작
+```
+
+### Gemini API 오류
+```bash
+# API 키 확인
+cat ~/.gemini/config
+
+# API 키 재설정
+mkdir -p ~/.gemini
+echo "YOUR_API_KEY" > ~/.gemini/config
+chmod 600 ~/.gemini/config
+
+# API 키 발급: https://aistudio.google.com/apikey
+```
+
+### 명령어 자동완성 안 됨
+```bash
+# Claude Code 버전 확인 (v1.0.62+ 필요)
+claude --version
+
+# 업데이트
+# macOS: brew upgrade claude-code
+# 또는 https://claude.ai/download에서 최신 버전 다운로드
+```
+
+---
+
+## 📋 요구사항
 
 - **Claude Code CLI**: v1.0.62+ (@ 멘션 지원)
-- **Gemini API**: `gemini`, `duo` 에이전트용
-- **Git**: 저장소 관리
+  - macOS: `brew install claude-code`
+  - 또는 https://claude.ai/download
+- **Git**: 저장소 클론용
+- **Gemini API** (선택): `gemini`, `duo` 기능 사용 시
+  - 무료 발급: https://aistudio.google.com/apikey
 
 ---
 
