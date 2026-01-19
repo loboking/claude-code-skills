@@ -35,19 +35,38 @@ chmod 600 ~/.gemini/config
 
 ## 호출 방법
 
-3가지 방식으로 호출할 수 있습니다:
+**2가지 실행 방식 + 3가지 호출 문법**
 
-| 방식 | 예시 | 특징 |
-|-----|------|------|
-| **@ 멘션** | `@agent-duo implement feature` | 자동완성 지원 (권장) |
-| **자연어** | `Use duo to implement feature` | 직접 호출 |
-| **슬래시** | `/duo implement feature` | 레거시 방식 |
+### 실행 방식 비교
 
-**@ 멘션 사용법:**
+| 방식 | 호출 | 속도 | 토큰 | 언제 사용? |
+|-----|------|------|------|----------|
+| **Skill** | `/duo 작업` | ⚡⚡⚡ 빠름 | 💰 적음 | 대부분의 경우 (권장) |
+| **Agent** | `@agent-duo 작업` | ⚡ 느림 | 💰💰💰 많음 | 병렬/백그라운드 필요 시 |
+
+### 호출 문법
+
+| 문법 | Skill 예시 | Agent 예시 | 특징 |
+|-----|-----------|-----------|------|
+| **슬래시** | `/duo 구현` | - | 빠른 실행 (Skill만) |
+| **@ 멘션** | - | `@agent-duo 구현` | 자동완성 지원 (Agent만) |
+| **자연어** | `Use duo to implement` | `Use duo agent to implement` | 직관적 |
+
+**사용 예시:**
 ```bash
-@agent-       # 입력 후 Tab → 모든 에이전트 자동완성
-@agent-duo    # duo 에이전트
-@agent-run    # run 에이전트
+# Skill 방식 (빠름, 토큰 효율)
+/duo 로그인 추가
+/gemini Python 설명
+/run README 작성
+
+# Agent 방식 (강력, 백그라운드)
+@agent-duo 마이크로서비스 설계
+@agent-gemini 알고리즘 분석
+@agent-run 전체 리팩토링
+
+# @ 멘션 자동완성
+@agent-       # Tab → 모든 에이전트 목록
+/mong         # Tab → 모든 Skill 목록 (monggle- 접두사)
 ```
 
 ---
@@ -64,28 +83,31 @@ chmod 600 ~/.gemini/config
 
 ---
 
-## 주요 에이전트
+## 주요 기능
 
 ### 🤝 duo - Claude + Gemini 동적 협업
 
 Claude와 Gemini가 합의할 때까지 동적으로 협업합니다.
 
 ```bash
+# Skill 방식 (빠름)
+/duo 로그인 기능 추가
+
+# Agent 방식 (강력)
 @agent-duo 마이크로서비스 설계
 @agent-duo -o 결제 시스템 아키텍처
 ```
 
-| 속성 | 값 |
-|-----|-----|
-| **속도** | 🐌 느림 (다중 라운드) |
-| **토큰** | 💰💰💰 높음 |
-| **품질** | ⭐⭐⭐⭐⭐ 최고 |
-| **사용 시기** | 복잡한 설계 결정 |
+| 속성 | Skill | Agent |
+|-----|-------|-------|
+| **속도** | ⚡⚡ 보통 | 🐌 느림 (다중 라운드) |
+| **토큰** | 💰💰 중간 | 💰💰💰 높음 |
+| **품질** | ⭐⭐⭐⭐⭐ 최고 | ⭐⭐⭐⭐⭐ 최고 |
 
-**사용 시기:**
-- 설계 검증이 필요한 복잡한 구현
-- 여러 접근법 비교 필요
-- 트레이드오프가 있는 아키텍처 결정
+**선택 가이드:**
+- 간단한 코드 추가 → `/duo` (Skill)
+- 복잡한 아키텍처 설계 → `@agent-duo` (Agent)
+- 백그라운드 협업 필요 → `@agent-duo` (Agent)
 
 ---
 
@@ -94,22 +116,26 @@ Claude와 Gemini가 합의할 때까지 동적으로 협업합니다.
 작업 복잡도를 분석하여 최적의 모델/에이전트를 자동 선택합니다.
 
 ```bash
-@agent-run 코드 리팩토링           # 자동 분석 후 추천
-@agent-run -h README 수정          # haiku로 즉시 실행
-@agent-run -o 전체 아키텍처 설계   # opus로 즉시 실행
+# Skill 방식 (빠름)
+/run 코드 리팩토링              # 자동 분석 후 추천
+/run -h README 수정             # haiku로 즉시 실행
+
+# Agent 방식 (강력)
+@agent-run -o 전체 아키텍처 설계
+@agent-run --dry 계획만 확인    # 백그라운드로 분석만
 ```
 
-| 속성 | 값 |
-|-----|-----|
-| **속도** | ⚡ 가변 (선택된 모델에 따라) |
-| **토큰** | 💰 가변 |
-| **품질** | ⭐⭐⭐⭐ 최적화됨 |
-| **특징** | 자동 모델 선택 |
+| 속성 | Skill | Agent |
+|-----|-------|-------|
+| **속도** | ⚡⚡ 빠름 | ⚡ 가변 |
+| **토큰** | 💰 낮음 | 💰💰 중간 |
+| **품질** | ⭐⭐⭐⭐ 우수 | ⭐⭐⭐⭐ 우수 |
 
 **옵션:**
 - `-h` : haiku (빠른 실행)
 - `-s` : sonnet (기본값)
 - `-o` : opus (최고 품질)
+- `--dry` : 계획만 생성 (실행 안함)
 
 ---
 
@@ -118,16 +144,19 @@ Claude와 Gemini가 합의할 때까지 동적으로 협업합니다.
 간단한 요청을 상세 요구사항으로 자동 확장합니다.
 
 ```bash
-@agent-super 로그인 기능 추가
-@agent-super --compact API 엔드포인트
+# Skill 방식 (빠름)
+/super 로그인 기능 추가
+/super --compact API 엔드포인트
+
+# Agent 방식 (강력)
+@agent-super -o 결제 시스템 설계
 ```
 
-| 속성 | 값 |
-|-----|-----|
-| **속도** | ⚡⚡ 빠름 |
-| **토큰** | 💰 낮음 |
-| **품질** | ⭐⭐⭐⭐ 우수 |
-| **특징** | 간결 모드 지원 |
+| 속성 | Skill | Agent |
+|-----|-------|-------|
+| **속도** | ⚡⚡⚡ 빠름 | ⚡⚡ 보통 |
+| **토큰** | 💰 낮음 | 💰💰 중간 |
+| **품질** | ⭐⭐⭐⭐ 우수 | ⭐⭐⭐⭐ 우수 |
 
 **자동 간결 모드:**
 - <15단어: Ultra-Compact
@@ -141,20 +170,60 @@ Claude와 Gemini가 합의할 때까지 동적으로 협업합니다.
 Gemini AI를 호출하거나 논쟁 모드를 실행합니다.
 
 ```bash
-@agent-gemini React 최적화 패턴은?
-@agent-gemini -t "TDD vs BDD"      # 논쟁 모드
+# Skill 방식 (빠름)
+/gemini Python 비동기 설명해줘
+/gemini -t "TDD vs BDD"         # 논쟁 모드
+
+# Agent 방식 (강력)
+@agent-gemini 복잡한 알고리즘 분석
 ```
 
-| 속성 | 값 |
-|-----|-----|
-| **속도** | ⚡⚡⚡ 매우 빠름 |
-| **토큰** | 💰 낮음 (Gemini API) |
-| **품질** | ⭐⭐⭐ 양호 |
-| **특징** | 논쟁 모드 지원 |
+| 속성 | Skill | Agent |
+|-----|-------|-------|
+| **속도** | ⚡⚡⚡ 매우 빠름 | ⚡⚡ 빠름 |
+| **토큰** | 💰 낮음 | 💰 낮음 |
+| **품질** | ⭐⭐⭐ 양호 | ⭐⭐⭐ 양호 |
+
+**특징:** 논쟁 모드 (`-t`) 지원 - Claude vs Gemini 논쟁
+
+---
+
+### 📝 간단한 Skill 전용 기능
+
+이 기능들은 Skill으로만 제공됩니다 (빠르고 효율적).
+
+#### doc-writer - 문서 자동 생성
+```bash
+/doc-writer readme              # README.md 생성
+/doc-writer api                 # API 문서 생성
+/doc-writer -h changelog        # haiku로 변경 이력 생성
+```
+- README, API 문서, 가이드 자동 생성
+- Git 히스토리 기반 CHANGELOG
+- ⚡⚡⚡ 빠름, 💰 저비용
+
+#### smart-brain - 토큰 최적화
+```bash
+/smart-brain                    # 프로젝트에 CLAUDE.md 최적화 규칙 추가
+```
+- diff-only 출력, 참조 우선, 재작업 방지
+- 세션당 20-40% 토큰 절약
+- ⚡⚡⚡ 빠름
+
+#### project-init - 프로젝트 초기화
+```bash
+/project-init react             # React 프로젝트 초기화
+/project-init                   # 자동 감지
+```
+- README, CLAUDE.md, .gitignore, 설정 파일, Git 초기화
+- React, Next.js, Flutter, Android, iOS, Spring Boot 등 지원
+- ⚡⚡ 보통
 
 ---
 
 ## 개발 지원 에이전트
+
+(Agent 전용 - 고급 기능)
 
 ### 🏗️ architecture-designer - 아키텍처 설계
 
@@ -430,6 +499,42 @@ Plan Mode로 프로젝트를 설계하고 자동 초기화합니다.
 ```bash
 @agent-debug-master
 # → 체계적 분석 → 근본 원인 파악 → 해결
+```
+
+---
+
+## 언제 Skill? 언제 Agent?
+
+### 선택 가이드
+
+| 상황 | 추천 | 이유 |
+|-----|------|------|
+| README 작성 | `/doc-writer` | 빠르고 간단 |
+| 간단한 기능 추가 | `/duo` | 토큰 효율적 |
+| 복잡한 아키텍처 | `@agent-duo` | 심층 분석 |
+| 여러 작업 동시 진행 | `@agent-*` | 병렬 처리 |
+| 1시간+ 걸리는 작업 | `@agent-*` | 백그라운드 실행 |
+| 빠른 질문 | `/gemini` | 즉각 응답 |
+
+### 원칙
+
+1. **의심스러우면 Skill 먼저** (빠르고 효율적)
+2. **Skill로 부족하면 Agent** (강력하지만 느림)
+3. **병렬 처리 필요하면 Agent** (동시 실행)
+4. **대부분의 경우 Skill로 충분** (95%)
+
+### 실제 예시
+
+```bash
+# ✅ 이렇게 하세요
+/duo 로그인 기능 추가              # 간단 → Skill
+/doc-writer readme              # 문서 → Skill
+/smart-brain                    # 최적화 → Skill
+
+# 🔧 이럴 때만 Agent
+@agent-duo 마이크로서비스 설계    # 복잡한 설계
+@agent-run 전체 시스템 리팩토링   # 긴 작업
+@agent-duo & @agent-gemini &    # 병렬 실행
 ```
 
 ---
