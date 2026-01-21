@@ -372,6 +372,52 @@ Gemini AI를 호출하거나 논쟁 모드를 실행합니다.
 
 ---
 
+### ⚖️ judge - 중립적 평가자
+
+중립적 입장에서 비판적 평가를 수행합니다. Opus 전용, 직설적 피드백 제공.
+
+```bash
+@agent-judge evaluate "Should I use microservices for MVP?"
+@agent-judge --brutal review authentication code
+@agent-judge --duo --moderate evaluate architecture design
+```
+
+| 속성 | 값 |
+|-----|-----|
+| **속도** | 🐌 느림 (심층 평가) |
+| **토큰** | 💰💰💰 높음 |
+| **품질** | ⭐⭐⭐⭐⭐ 최고 |
+| **모델** | opus (강제) |
+
+**평가 영역:**
+- 기술적 의사결정 (아키텍처, 기술 스택)
+- 코드 품질 (보안, 성능, SOLID 원칙)
+- 아이디어/기획 (실현 가능성, 비즈니스 가치)
+- 논리/주장 (논리적 타당성, 증거 강도)
+
+**출력:**
+- A-F 등급 + 1-10 점수
+- 판결문 (승인/조건부/반려)
+- 강점 vs 약점 (우선순위별)
+- 반박 논리 (Devil's Advocate)
+- 대안 제시 (최소 2개 + Trade-off)
+
+**옵션:**
+```bash
+--brutal     # 매우 강하게 (쓴소리, 거침없는 비판)
+--moderate   # 적당히 직설적 (기본값, 권장)
+--objective  # 객관적 비판만 (감정 배제)
+--duo        # Claude + Gemini 협업 (1-3라운드)
+```
+
+**차별화:**
+- vs. code-reviewer: 4가지 영역 + 판결문 + 점수
+- vs. duo: 비판/평가 전문 (합의 도출 X)
+- 건설적이지만 냉정한 평가
+- 반박 논리 + 대안 필수
+
+---
+
 ### 🐛 debug-master - 디버깅 전문가
 
 복잡한 버그를 체계적으로 분석하고 해결합니다.
