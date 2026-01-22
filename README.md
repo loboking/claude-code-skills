@@ -72,7 +72,30 @@ cd ~/.claude/commands
 # 4. Claude Code CLI 재시작
 ```
 
-### 3. 설치 확인
+### 3. 기존 설치자 업데이트
+
+이미 설치된 경우, 아래 명령어로 최신 버전으로 업데이트:
+
+```bash
+# 한 줄 업데이트
+cd ~/.claude/commands && git pull && ./install.sh
+```
+
+**또는 단계별:**
+```bash
+# 1. 디렉토리 이동
+cd ~/.claude/commands
+
+# 2. 최신 버전 가져오기
+git pull
+
+# 3. 설치 스크립트 재실행 (Agent, PRD 템플릿 업데이트)
+./install.sh
+
+# 4. Claude Code CLI 재시작
+```
+
+### 4. 설치 확인
 ```bash
 # Skill 목록 확인
 ls ~/.claude/commands/*.md | grep -v README

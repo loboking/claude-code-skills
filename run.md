@@ -2,6 +2,49 @@
 description: DEPRECATED - Use run-agent instead
 ---
 
+## 0. Help System (First Priority)
+
+Check if args match help patterns:
+- `--help`
+- `-h` alone (without other text)
+- empty args
+
+If help requested, show and exit:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📖 /run 사용 가이드 (DEPRECATED)
+
+⚠️ 이 스킬은 에이전트로 마이그레이션되었습니다.
+
+새로운 사용법:
+  Use run to analyze task                # 자연어 호출
+  Use monggle-run to implement feature   # 긴 이름
+  @agent-run analyze codebase            # @ 멘션
+
+옵션:
+  -o, --opus       최고 품질 (복잡한 작업)
+  -s, --sonnet     균형 잡힌 성능 (기본값)
+  -h, --haiku      빠른 실행
+  --dry            계획만 표시 (실행 안함)
+  --temp           임시 리소스 사용
+
+기능:
+  작업 복잡도 자동 분석
+  최적 모델/에이전트 선택
+  프로젝트 타입 감지
+  Hook/MCP 자동 추천
+
+예시:
+  Use run to refactor code
+  Use run -h to fix typo
+  Use run --dry to show plan
+  @agent-run analyze this project
+
+문서: ~/.claude/agents/run.md
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+---
+
 # ⚠️ DEPRECATED: /run Skill
 
 This skill has been migrated to an agent for token efficiency.
