@@ -392,6 +392,39 @@ Gemini AI를 호출하거나 논쟁 모드를 실행합니다.
 
 이 기능들은 Skill으로만 제공됩니다 (빠르고 효율적).
 
+#### lint-smart - 스마트 린터 🆕
+```bash
+/lint-smart                     # 프로젝트 자동 감지 후 린트
+/lint-smart --fix              # 문제 자동 수정
+/lint-smart --file src/main.ts # 특정 파일만
+```
+- JavaScript/TypeScript, Python, Go, Java, Ruby, Rust, PHP 지원
+- eslint, flake8, golangci-lint, rubocop, clippy 등 자동 선택
+- ⚡⚡⚡ 빠름, 💰 저비용
+
+#### changelog - CHANGELOG 자동 생성 🆕
+```bash
+/changelog                      # 전체 히스토리로 CHANGELOG 생성
+/changelog --since v1.0.0       # v1.0.0 이후부터
+/changelog --unreleased         # 릴리즈 대기 중만
+/changelog --bump patch         # 버전 패치 증가
+```
+- Conventional Commits 파싱
+- Keep a Changelog 형식 지원
+- 자동 버전 증가 (major/minor/patch)
+- ⚡⚡⚡ 빠름
+
+#### bottleneck - 성능 병목 분석 🆕
+```bash
+/bottleneck                    # 자동 감지 후 병목 분석
+/bottleneck --cpu             # CPU 병목 분석
+/bottleneck --profile <pid>   # 실행 중인 프로세스 프로파일링
+/bottleneck --flamegraph      # 플레임그래프 생성
+```
+- Python (py-spy, cProfile), Go (pprof), Node (clinic) 지원
+- 정적 분석 + 동적 프로파일링
+- ⚡⚡ 보통
+
 #### doc-writer - 문서 자동 생성
 ```bash
 /doc-writer readme              # README.md 생성
@@ -665,6 +698,9 @@ Plan Mode로 프로젝트를 설계하고 자동 초기화합니다.
 /monggle-duo 설계               # = /duo
 /monggle-run 작업               # = /run
 /monggle-gemini 질문            # = /gemini
+/monggle-lint-smart             # = /lint-smart 🆕
+/monggle-changelog              # = /changelog 🆕
+/monggle-bottleneck             # = /bottleneck 🆕
 /monggle-doc-writer readme      # = /doc-writer
 /monggle-smart-brain            # = /smart-brain
 /monggle-project-init react     # = /project-init
@@ -788,6 +824,82 @@ ls ~/.claude/.prd/archive/
 
 ---
 
+## 🤖 자동화 기능 🆕
+
+Vibe Coding Rules는 개발 흐름에 맞춰 자동으로 코드 품질을 관리합니다.
+
+### Git Hooks
+
+#### pre-commit (커밋 전)
+```bash
+# 자동으로 실행:
+- /lint-smart --check    # 코드 품질 검사 (수정 없음)
+- Secrets 검사           # 민감 정보 포함 확인
+```
+
+#### post-commit (커밋 후)
+```bash
+# 자동 추천:
+- /changelog --unreleased  # CHANGELOG 업데이트
+```
+
+### SessionStart Hook
+
+세션 시작 시 자동으로 프로젝트를 분석:
+```
+═══════════════════════════════════════════════════
+🔄 Vibe Coding Rules - 세션 시작
+═══════════════════════════════════════════════════
+
+프로젝트: Node.js
+최근 커밋: [최근 3개 커밋 표시]
+코드 품질 도구: eslint 사용 가능
+
+💡 추천 스킬:
+  📝 /changelog         - CHANGELOG 자동 생성
+  🔍 /lint-smart        - 코드 품질 검사
+  ⚡ /bottleneck       - 성능 병목 분석
+```
+
+### 자동 감지 기능
+
+| 상황 | 자동 동작 |
+|------|----------|
+| 코드 변경 | `/lint-smart` 실행 제안 |
+| N+1 쿼리 패턴 | `/bottleneck --db` 실행 제안 |
+| Blocking I/O | `/bottleneck --io` 실행 제안 |
+| Conventional Commit | `/changelog` 업데이트 제안 |
+| 세션 시작 | 프로젝트 분석 후 스킬 추천 |
+
+### 자동화 설정
+
+```json
+// .claude/settings.json
+{
+  "monggle": {
+    "autoQuality": {
+      "enabled": true,
+      "lintOnCommit": true,
+      "changelogOnCommit": true,
+      "suggestOnEdit": true
+    }
+  }
+}
+```
+
+### 자동화 비활성화
+
+```bash
+# Git hooks 비활성화
+git config --unset hook.pre-commit
+
+# 또는 개별 훅 제거
+rm .git/hooks/pre-commit
+rm .git/hooks/post-commit
+```
+
+---
+
 ## 언제 Skill? 언제 Agent?
 
 ### 선택 가이드
@@ -836,11 +948,14 @@ Claude는 상황을 감지하여 관련 스킬을 **자동으로 추천**합니�
 | 상황 | 추천 스킬 | 예시 |
 |-----|----------|------|
 | 📄 문서 작성 요청 | `/doc-writer` | "README 만들어줘" → `/doc-writer readme` |
+| 🔍 코드 품질 확인 | `/lint-smart` | "코드 검사해줘" → `/lint-smart` 🆕 |
+| 📝 CHANGELOG 작성 | `/changelog` | "변경사항 정리" → `/changelog` 🆕 |
+| ⚡ 성능 문제 | `/bottleneck` | "앱이 느려" → `/bottleneck` 🆕 |
 | 🏗️ 설계/아키텍처 질문 | `/duo` | "어떤 아키텍처가 좋을까?" → `/duo` |
 | 🚀 프로젝트 초기화 | `/project-init` | "새 React 프로젝트" → `/project-init react` |
 | 💰 토큰 최적화 필요 | `/smart-brain` | 세션 시작 시 → `/smart-brain` |
-| 📋 기획서 작성 | `/planner` 또는 `/super` | "기획서 작성해줘" → `/super` (PRD) 🆕 |
-| ✨ 막연한 아이디어 | `/super` | "로그인 시스템 만들고 싶어" → `/super` (PRD) 🆕 |
+| 📋 기획서 작성 | `/planner` 또는 `/super` | "기획서 작성해줘" → `/super` (PRD) |
+| ✨ 막연한 아이디어 | `/super` | "로그인 시스템 만들고 싶어" → `/super` (PRD) |
 | 🎯 작업 복잡도 분석 | `/run` | "어떻게 진행하지?" → `/run` |
 | 🤖 다른 AI 의견 | `/gemini` | "다른 의견 듣고 싶어" → `/gemini` |
 | 🔄 A vs B 비교 | `/duo` | "A vs B 뭐가 나아?" → `/duo` |
@@ -986,7 +1101,21 @@ ls ~/.claude/.prd/templates/
 
 ## 버전 이력
 
-### v2.0 (2026-01-22) 🆕
+### v2.1 (2026-03-31) 🆕
+- ✨ **코드 품질 스킬 추가** (`/lint-smart`)
+  - 프로젝트 자동 감지 (JS/TS, Python, Go, Java, Ruby, Rust, PHP)
+  - eslint, flake8, golangci-lint, rubocop, clippy 등 자동 선택
+- ✨ **문서 자동화 스킬 추가** (`/changelog`)
+  - Git 커밋 기반 CHANGELOG.md 자동 생성
+  - Conventional Commits 파싱
+  - Keep a Changelog 형식 지원
+  - 자동 버전 증가 (major/minor/patch)
+- ✨ **성능 분석 스킬 추가** (`/bottleneck`)
+  - 성능 병목 지점 찾기
+  - py-spy, pprof, clinic.js 지원
+  - 플레임그래프 생성
+
+### v2.0 (2026-01-22)
 - ✨ PRD 기반 워크플로우 추가 (`super`, `duo`, `run`)
 - ✨ 기본 Plan Mode (승인 후 실행)
 - ✨ `--auto` 플래그 (Free Pass 모드)
